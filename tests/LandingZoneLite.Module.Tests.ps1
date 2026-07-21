@@ -160,6 +160,9 @@ Describe 'New-LandingZoneResourceGroup' {
 Describe 'New-LandingZonePolicyAssignment' {
 
     BeforeEach {
+        Mock -CommandName Get-AzContext -ModuleName LandingZoneLite -MockWith {
+            [PSCustomObject]@{ Subscription = [PSCustomObject]@{ Id = '00000000-0000-0000-0000-000000000000'; Name = 'mock-sub' } }
+        }
         Mock -CommandName Get-AzResourceGroup -ModuleName LandingZoneLite -MockWith {
             [PSCustomObject]@{ ResourceGroupName = 'rg-lzlite-mgmt-eastus'; ResourceId = '/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-lzlite-mgmt-eastus' }
         }
@@ -197,6 +200,9 @@ Describe 'New-LandingZonePolicyAssignment' {
 Describe 'New-LandingZoneRoleAssignment' {
 
     BeforeEach {
+        Mock -CommandName Get-AzContext -ModuleName LandingZoneLite -MockWith {
+            [PSCustomObject]@{ Subscription = [PSCustomObject]@{ Id = '00000000-0000-0000-0000-000000000000'; Name = 'mock-sub' } }
+        }
         Mock -CommandName Get-AzResourceGroup -ModuleName LandingZoneLite -MockWith {
             [PSCustomObject]@{ ResourceGroupName = 'rg-lzlite-mgmt-eastus'; ResourceId = '/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-lzlite-mgmt-eastus' }
         }
