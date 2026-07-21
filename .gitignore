@@ -1,0 +1,36 @@
+# Logs
+logs/
+*.log
+
+# Test results
+TestResults/
+*.trx
+*.xml.results
+
+# Terraform (in case of future IaC parity work)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Editor/IDE
+.vscode/
+.vs/
+*.swp
+*.swo
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# PowerShell
+*.ps1xml.bak
+
+# Module build artifacts
+*.nupkg
+Output/
+Release/
+
+# Local secrets / overrides (never commit real config)
+*.local.json
+config/*.local.json

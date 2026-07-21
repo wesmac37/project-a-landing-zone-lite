@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "_comment": "EXAMPLE PLACEHOLDER CONFIG. Replace subscriptionId and ownerTag before running deploy.ps1. See README.md 'Things you must edit before running'.",
+
+  "subscriptionId": "00000000-0000-0000-0000-000000000000",
+  "_subscriptionId_comment": "PLACEHOLDER. Replace with your Azure subscription ID (Get-AzContext or az account show --query id).",
+
+  "location": "eastus",
+
+  "environment": "sandbox",
+
+  "ownerTag": "your-name@example.com",
+  "_ownerTag_comment": "PLACEHOLDER. Replace with your name/email so resources are traceable to an owner.",
+
+  "costCenterTag": "CC-0000",
+  "_costCenterTag_comment": "PLACEHOLDER. Replace with a cost center code meaningful to you/your org, or leave as-is for a personal sandbox.",
+
+  "uniqueSuffix": "REPLACE-ME",
+  "_uniqueSuffix_comment": "PLACEHOLDER. Generate a unique 6-character lowercase suffix before deploying, e.g. in PowerShell: -join ((97..122) | Get-Random -Count 6 | ForEach-Object {[char]$_}). Used to make the storage account and Key Vault names globally unique (e.g. stlzlite<uniqueSuffix>, kv-lzlite-<uniqueSuffix>).",
+
+  "budgetAmountUSD": 5,
+
+  "includeNetwork": false,
+  "_includeNetwork_comment": "Default OFF. This is the only piece of the landing zone that meaningfully grows resource count. Set to true or pass -IncludeNetwork to deploy.ps1 to also create the spoke VNet/subnet/NSG.",
+
+  "includeBudget": true,
+  "_includeBudget_comment": "Default ON. Azure Cost Management budgets and alerts are a free feature, so this is safe to leave enabled.",
+
+  "tagPolicyName": "Environment",
+  "_tagPolicyName_comment": "The tag name that the 'Inherit a tag from the resource group if missing' policy assignment will enforce inheritance for.",
+
+  "rbacPrincipalObjectId": "11111111-1111-1111-1111-111111111111",
+  "_rbacPrincipalObjectId_comment": "PLACEHOLDER. Replace with a real Azure AD user/group/service principal object ID from your tenant before deploying if you want the Reader role assignment step to succeed. If left as-is or invalid, deploy.ps1 will log a warning and continue (non-fatal by design).",
+
+  "contactEmail": "your-name@example.com",
+  "_contactEmail_comment": "PLACEHOLDER. Replace with a real email address to receive budget alert notifications."
+}
