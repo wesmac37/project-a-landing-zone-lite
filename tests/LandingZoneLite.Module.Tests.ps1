@@ -12,12 +12,14 @@ BeforeAll {
     $script:ConfigPath = Join-Path $PSScriptRoot '..' 'config' 'landingzone.config.json'
     $script:AzStubsPath = Join-Path $PSScriptRoot 'AzStubs.psm1'
 
-    # Import no-op Az cmdlet stubs first so Mock can attach to them even when the real Az
-    # PowerShell module isn't installed in the test environment. Every stub is fully replaced by
-    # an explicit Mock in each test - no stub body ever executes as-is.
-    if (-not (Get-Module -Name Az.Accounts -ListAvailable -ErrorAction SilentlyContinue)) {
-        Import-Module $script:AzStubsPath -Force -Global
-    }
+    # Import no-op Az cmdlet stubs unconditionally, regardless of whether the real Az PowerShell
+    # module happens to be installed on this machine/runner. This guarantees every Az* cmdlet
+    # name used by the module resolves to our controlled, deterministic no-op stub (imported
+    # -Global, so it wins command resolution over any lazily auto-loaded real Az module) rather
+    # than a real cmdlet that could attempt a live call and fail with an authentication error
+    # (e.g. 'Run Connect-AzAccount to login.') when a mock isn't perfectly scoped. Every stub is
+    # then fully replaced by an explicit Mock in each test - no stub body ever executes as-is.
+    Import-Module $script:AzStubsPath -Force -Global
 
     Import-Module $script:ModuleManifest -Force
 }
