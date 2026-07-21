@@ -32,6 +32,10 @@ function New-LandingZoneKeyVault {
         New-LandingZoneKeyVault -Name 'kv-lzlite-abc123' -ResourceGroupName 'rg-lzlite-data-eastus' -Location 'eastus' -Tags $tags -WhatIf
     #>
     [CmdletBinding(SupportsShouldProcess = $true)]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSAvoidUsingConvertToSecureStringWithPlainText',
+        '',
+        Justification = 'SecretValue is a caller-supplied Mandatory string parameter, not a hardcoded credential. Set-AzKeyVaultSecret requires a SecureString, so converting the caller-provided plain text is the documented Az PowerShell pattern for writing a secret value here.')]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
