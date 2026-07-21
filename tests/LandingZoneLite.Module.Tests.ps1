@@ -256,6 +256,14 @@ Describe 'deploy.ps1 dry-run (-WhatIf)' {
             Mock -CommandName $target.Name -ModuleName LandingZoneLite -MockWith $target.With
         }
 
+        # deploy.ps1 itself calls 'Import-Module $modulePath -Force' to guarantee the freshest
+        # module code is loaded when run for real. Under test, that self-reimport would discard
+        # the LandingZoneLite module instance (and every -ModuleName mock above) that this test
+        # just set up, causing later calls to fall through to the real Az cmdlets. Since the
+        # module is already loaded (and already mocked) by this file's own top-level BeforeAll,
+        # make the script's internal re-import a no-op here.
+        Mock -CommandName Import-Module -MockWith { }
+
         { & $script:DeployScript -ConfigPath $script:ConfigPath -WhatIf } | Should -Not -Throw
     }
 }
