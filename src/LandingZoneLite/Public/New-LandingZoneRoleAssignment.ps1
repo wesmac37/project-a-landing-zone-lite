@@ -41,8 +41,22 @@ function New-LandingZoneRoleAssignment {
     )
 
     try {
-        $rg = Get-AzResourceGroup -Name $ResourceGroupName -ErrorAction Stop
-        $scope = $rg.ResourceId
+        # Build the resource-group scope deterministically from the current subscription ID and
+        # the resource group name, rather than depending on Get-AzResourceGroup returning a live
+        # object. Under -WhatIf, a resource group that is being created earlier in the same run
+        # (e.g. by New-LandingZoneResourceGroup) genuinely does not exist yet, so Get-AzResourceGroup
+        # would return $null there - relying on '$rg.ResourceId' would then fail even though the
+        # scope path itself is fully predictable from subscription ID + resource group name.
+        $context = Get-AzContext -ErrorAction Stop
+        if (-not $context -or -not $context.Subscription -or -not $context.Subscription.Id) {
+            throw 'No active Az context/subscription was found while building the role assignment scope.'
+        }
+        $scope = "/subscriptions/$($context.Subscription.Id)/resourceGroups/$ResourceGroupName"
+
+        $rg = Get-AzResourceGroup -Name $ResourceGroupName -ErrorAction SilentlyContinue
+        if (-not $rg) {
+            Write-LzLog -Message "Resource group '$ResourceGroupName' was not found (it may be created earlier in this same run under -WhatIf). Proceeding with the computed scope '$scope'." -Level Info
+        }
 
         $existing = Get-AzRoleAssignment -ObjectId $ObjectId -RoleDefinitionName $RoleDefinitionName -Scope $scope -ErrorAction SilentlyContinue
 
